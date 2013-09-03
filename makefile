@@ -2,17 +2,25 @@ CC=g++
 CFLAGS=-Wall -g
 CFLAGS_TEST=-g
 
-TIMELAPSE_FILES= timelapse.cpp timelapse.h
-TIMELAPSE_TEST_FILES= test-timelapse.h
+TIMELAPSED_OBJS= timelapsed.o
+TIMELAPSED_TEST_FILES= test-timelapsed.h
 
-all: timelapse run-tests
+all: timelapsed run-tests
 
-timelapse: $(TIMELAPSE_FILES)
-	$(CC) $(CFLAGS) -o timelapse timelapse.cpp
+timelapsed: $(TIMELAPSED_OBJS) main.o
+	$(CC) $(CFLAGS) $^ -o timelapsed
 
-run-tests: $(TIMELAPSE_TEST_FILES)
-	cxxtestgen --error-printer -o run-tests.cpp test-timelapse.h
-	$(CC) $(CFLAGS_TEST) -o run-tests run-tests.cpp
+run-tests: runner
+	./runner
+
+runner: runner.cpp $(TIMELAPSED_OBJS)
+	$(CC) $(CFLAGS_TEST) -o $@ $^
+
+runner.cpp: $(TIMELAPSED_TEST_FILES)
+	cxxtestgen -o $@ --error-printer $^
 
 clean:
-	rm -rf timelapse run-tests*
+	rm -rf timelapsed runner* *.o
+
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c $<
