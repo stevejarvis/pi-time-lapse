@@ -1,3 +1,10 @@
+# Executables
+timelapse
+run-tests
+
+# Generated
+run-tests.cpp
+
 # Compiled Object files
 *.slo
 *.lo
