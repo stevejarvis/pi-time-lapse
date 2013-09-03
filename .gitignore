@@ -1,9 +1,9 @@
 # Executables
-timelapse
-run-tests
+timelapsed
+runner
 
 # Generated
-run-tests.cpp
+runner.cpp
 
 # Compiled Object files
 *.slo
