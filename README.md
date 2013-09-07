@@ -5,6 +5,6 @@ Daemon to capture time lapse photography. Engineered with Raspian in mind.
 
 ### Prereqs
 
-CxxTest
+CxxTest (optional)
 
     # apt-get install cxxtest
