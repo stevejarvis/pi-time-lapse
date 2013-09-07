@@ -18,11 +18,15 @@ Timelapsed::Timelapsed ( int seconds, const char * logfile ) {
 }
 
 Timelapsed::~Timelapsed ( ) {
-    this->log.close ( );
+    this->logfile.close ( );
 }
 
 int Timelapsed::getBreak ( ) {
     return this->secondsBreak;
+}
+
+void Timelapsed::log ( std::string message ) {
+    this->logfile << message << std::endl;
 }
 
 bool Timelapsed::daemonize ( ) {
@@ -42,7 +46,7 @@ bool Timelapsed::daemonize ( ) {
     // 022 will create files with 644 perms
     umask ( S_IWGRP | S_IWOTH );
 
-    this->log.open ( this->logpath, std::ios_base::app );
+    this->logfile.open ( this->logpath, std::ios_base::app );
 
     // Getting a unique session ID takes process out of orphan land
     sid = setsid ( );
