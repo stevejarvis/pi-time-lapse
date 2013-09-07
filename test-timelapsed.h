@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <cstdlib>
+#include <fstream>
 #include "timelapsed.h"
 
 class MTestSuite : public CxxTest::TestSuite {
@@ -15,7 +16,7 @@ class MTestSuite : public CxxTest::TestSuite {
 public:
 
     void setUp ( ) {
-        logname = "testlog.txt";
+        logname = "/home/pi/pi-time-lapse/testlog.txt";
     }
 
     void tearDown ( ) {
@@ -37,12 +38,27 @@ public:
     void testUmaskPermissions ( void ) {
         struct stat file_perms;
         Timelapsed * tl = new Timelapsed ( 30, logname );
-        TS_ASSERT ( tl->daemonize ( ) );
+        tl->daemonize ( );
         stat ( logname, &file_perms );
         TS_ASSERT ( file_perms.st_mode & S_IRUSR );
         TS_ASSERT ( file_perms.st_mode & S_IWUSR );
         TS_ASSERT ( ! ( file_perms.st_mode & S_IWOTH ) );
         TS_ASSERT ( file_perms.st_mode & S_IROTH );
+        delete tl;
+    }
+
+    void testLogFile ( void ) {
+        std::ifstream in;
+        std::string message = "hello log";
+        std::string recv;
+        Timelapsed * tl = new Timelapsed ( 300, logname );  
+
+        tl->daemonize ( );
+        tl->log ( message );
+        in.open ( logname, std::ifstream::in );
+        std::getline ( in, recv );
+        in.close ( );
+        TS_ASSERT_EQUALS ( message, recv );
         delete tl;
     }
 
