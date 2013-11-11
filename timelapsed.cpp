@@ -88,7 +88,7 @@ bool Timelapsed::daemonize ( ) {
         return false;
     }
 
-if ( ! DEBUG ) {
+#ifndef TESTING    
     close ( STDIN_FILENO );
     close ( STDOUT_FILENO );
     close ( STDERR_FILENO );
@@ -98,7 +98,7 @@ if ( ! DEBUG ) {
         takePicture();
         sleep( this->secondsBreak );
     }
-}
+#endif
 
     return true;
 }

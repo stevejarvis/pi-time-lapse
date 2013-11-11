@@ -5,6 +5,8 @@ CFLAGS_TEST=-g
 TIMELAPSED_OBJS= timelapsed.o
 TIMELAPSED_TEST_FILES= test-timelapsed.h
 
+run-tests: CFLAGS += -DTESTING
+
 all: timelapsed 
 
 timelapsed: $(TIMELAPSED_OBJS) main.o
@@ -30,3 +32,7 @@ clean:
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $<
+
+timelapsed.o: FORCE
+
+FORCE:
