@@ -2,11 +2,22 @@
  * Just start the daemon.
  */
 
+#include <iostream>
+#include <string>
+
 #include "timelapsed.h"
-#include <cstdio>
+
+// Logpath
+const std::string logpath = "/var/log/timelapsed";
+// Directory to contain pictures
+const std::string picdir = "/home/pi/pi-time-lapse/raspipics/";
+// Delay in seconds
+const int delay = 600;
 
 int main ( int argc, char * argv[] ) {
-    printf ( "Hello Pi Time Lapse\n" );
+
+    Timelapsed* td = new Timelapsed( delay, logpath.c_str(), picdir.c_str() );
+    td->daemonize();
 
     return 0;
 }

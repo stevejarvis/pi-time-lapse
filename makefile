@@ -1,16 +1,22 @@
 CC=g++
 CFLAGS=-Wall -g
-CFLAGS_TEST=-g
+CFLAGS_TEST=-g 
 
 TIMELAPSED_OBJS= timelapsed.o
 TIMELAPSED_TEST_FILES= test-timelapsed.h
 
-all: timelapsed run-tests
+all: timelapsed 
 
 timelapsed: $(TIMELAPSED_OBJS) main.o
 	$(CC) $(CFLAGS) $^ -o timelapsed
 
-run-tests: runner
+install:
+	cp timelapsed /usr/local/bin/timelapsed
+	cp timelapse /etc/init.d/timelapse
+	update-rc.d timelapse defaults
+	service timelapse start
+
+run-tests: runner timelapsed
 	./runner
 
 runner: runner.cpp $(TIMELAPSED_OBJS)
