@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# This starts and stops timelapse daemon.
+# Place in /etc/init.d and 'update-rc.d defaults'
+#
+### BEGIN INIT INFO
+# Provides:          timelapsed
+# Required-Start:
+# Required-Stop:
+# Short-Description: Pretty picture taker!
+# Description:       Take timelapse pictures with the Pi.
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+### END INIT INFO
+
+
+NAME=Timelapse
+DAEMON="/usr/local/bin/timelapsed"
+
+[ -x $DAEMON ] || exit 0
+
+RETVAL=0
+
+start() {
+    echo "Starting Pi Time Lapse "
+    start-stop-daemon --start --exec ${DAEMON}
+}
+
+stop() {
+    echo "Stopping Pi Time Lapse "
+    start-stop-daemon --stop --exec ${DAEMON} 
+}
+
+status() {
+    pid=`pgrep -u root timelapsed`
+    if [ -z  "$pid" ]
+    then
+        echo "Timelapse is not running"
+    else
+        echo "Timelapse is running"
+    fi
+}
+
+restart() {
+    stop
+    sleep 1
+    start
+}
+
+case "$1" in
+    start)
+        start
+    ;;
+    stop)
+        stop
+    ;;
+    status)
+        status timelapse
+    ;;
+    restart)
+        restart
+    ;;
+    *)
+        echo "Usage: $0 {start|stop|status|restart}"
+    ;;
+esac
+
+exit 0
+
