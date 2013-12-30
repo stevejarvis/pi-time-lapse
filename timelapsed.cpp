@@ -1,5 +1,5 @@
 /*
- * A daemon to capture timelapse photography. 
+ * A daemon to capture timelapse photography.
  * Focused on Raspberry Pi and Raspian.
  */
 
@@ -15,7 +15,7 @@
 const bool DEBUG = false;
 
 Timelapsed::Timelapsed ( int seconds, const char * logfile, const char * picpath ) {
-    this->secondsBreak = seconds; 
+    this->secondsBreak = seconds;
     this->logpath = logfile;
     this->picdir = picpath;
 }
@@ -25,17 +25,22 @@ Timelapsed::~Timelapsed ( ) {
 }
 
 bool Timelapsed::takePicture ( ) {
-    std::stringstream cmd; 
-    cmd << "raspistill --exposure auto -o " 
-        << this->picdir 
-        << "/" << getTimeString() 
+    std::stringstream cmd;
+    std::stringstream log_msg;
+
+    cmd << "raspistill --exposure auto --vflip -o "
+        << this->picdir
+        << "/" << getTimeString()
         << ".jpg";
-    const char * c_cmd = cmd.str().c_str(); 
-    if ( system( c_cmd ) == -1 )
+    log_msg << "command: " << cmd.str() << "    ";
+    int ret = system( cmd.str().c_str() );
+    if ( ret != 0 )
     {
-        log( "takePicture: Error executing picture command." );
+        log_msg << "Error executing picture command. Error code: " << ret;
+        log( log_msg.str() );
         return false;
     }
+    log_msg << "Successful took picture.";
     return true;
 }
 
@@ -88,7 +93,7 @@ bool Timelapsed::daemonize ( ) {
         return false;
     }
 
-#ifndef TESTING    
+#ifndef TESTING
     close ( STDIN_FILENO );
     close ( STDOUT_FILENO );
     close ( STDERR_FILENO );
@@ -102,4 +107,3 @@ bool Timelapsed::daemonize ( ) {
 
     return true;
 }
-
